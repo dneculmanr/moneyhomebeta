@@ -1,35 +1,25 @@
-# 💰 MoneyHome - Sistema de Finanzas del Hogar
+💰 MoneyHome - Sistema de Finanzas del Hogar
 
-## 📌 Descripción
-
+📌 Descripción
 MoneyHome es una aplicación web desarrollada en Python con Flask que permite a los usuarios registrar y gestionar sus ingresos y gastos del hogar, visualizar su saldo y organizar sus movimientos mediante categorías.
 
----
-
-## ⚙️ Requisitos
-
+⚙️ Requisitos
 Antes de ejecutar el sistema, asegúrate de tener instalado:
 
-* Python 3
-* MySQL Server
-* MySQL Workbench (opcional)
-* Visual Studio Code
+- Python 3
+- MySQL Server
+- MySQL Workbench (opcional)
+- Visual Studio Code
 
----
+🧱 Configuración de la Base de Datos
 
-## 🧱 Configuración de la Base de Datos
+1. Iniciar MySQL
+- Abrir MySQL Workbench
+- Conectarse a Local instance MySQL80
+- Ingresar contraseña del usuario root
 
-### 1. Iniciar MySQL
+2. Crear la base de datos
 
-* Abrir MySQL Workbench
-* Conectarse a `Local instance MySQL80`
-* Ingresar contraseña del usuario root
-
-### 2. Crear la base de datos
-
-Ejecutar el siguiente script SQL:
-
-```sql
 CREATE DATABASE moneyhome;
 USE moneyhome;
 
@@ -45,71 +35,60 @@ CREATE TABLE categorias (
     nombre VARCHAR(100)
 );
 
+CREATE TABLE tipo_movimiento (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(50)
+);
+
 CREATE TABLE movimientos (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT,
     monto DECIMAL(10,2),
     categoria_id INT,
+    tipo_id INT,
     fecha DATE,
     descripcion TEXT,
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id),
-    FOREIGN KEY (categoria_id) REFERENCES categorias(id)
-    FOREIGN KEY (tipo_movimiento_id) REFERENCES tipo_movimientos(id)
+    FOREIGN KEY (categoria_id) REFERENCES categorias(id),
+    FOREIGN KEY (tipo_id) REFERENCES tipo_movimiento(id)
 );
 
-CREATE TABLE tipo_movimiento (
-    id INT AUTO_INCREMENTAL PRIMARY KEY,
-    nombre VARCHAR (20),
-    tipo NUMBER
-);
+3. Insertar datos iniciales
 
-```
-
-### 3. Insertar datos iniciales 
-
-```sql
 INSERT INTO categorias (nombre) VALUES
 ('Alimentación'),
 ('Transporte'),
 ('Ocio'),
-('Salud');
+('Salud'),
+('Otros');
 
-INSERT INTO tipo_movimiento (nombre,tipo) VALUES
-('Ingreso', 1),
-('Egreso',2),
-```
+INSERT INTO tipo_movimiento (nombre) VALUES
+('ingreso'),
+('gasto'),
+('transferencia');
 
----
+⚠️ IMPORTANTE (ERROR 1175 MYSQL)
 
-## 🔌 Configuración del Proyecto
+Si aparece este error al hacer UPDATE:
 
-### 1. Abrir proyecto en VS Code
+Error Code: 1175 (safe update mode)
 
-* Abrir la carpeta del proyecto
+Ejecutar antes:
 
-### 2. Abrir terminal
+SET SQL_SAFE_UPDATES = 0;
 
-En VS Code:
+🔌 Configuración del Proyecto
 
-```
-Terminal → New Terminal
-```
+1. Abrir proyecto en VS Code
+2. Abrir terminal (Terminal → New Terminal)
+3. Instalar dependencias
 
-### 3. Instalar dependencias
-
-```bash
 pip install flask mysql-connector-python
-```
 
----
+▶️ Ejecución del Sistema
 
-## ▶️ Ejecución del Sistema
+1. Verificar conexión en app.py
 
-### 1. Verificar conexión en `app.py`
-
-Asegurarse de que los datos coincidan con tu configuración:
-
-```python
 def get_db_connection():
     return mysql.connector.connect(
         host="localhost",
@@ -117,65 +96,42 @@ def get_db_connection():
         password="TU_PASSWORD",
         database="moneyhome"
     )
-```
 
----
+2. Ejecutar la aplicación
 
-### 2. Ejecutar la aplicación
-
-En la terminal:
-
-```bash
 python app.py
-```
 
----
+3. Abrir en el navegador
 
-### 3. Abrir en el navegador
-
-Ir a:
-
-```
 http://127.0.0.1:5000
-```
 
----
+🔐 Funcionalidades
 
-## 🔐 Funcionalidades
+- Registro de usuario
+- Inicio de sesión
+- Registro de ingresos y gastos
+- Clasificación por categorías
+- Visualización de movimientos
+- Cálculo automático de saldo
+- Dashboard con resumen financiero
 
-* Registro de usuario
-* Inicio de sesión
-* Registro de ingresos y gastos
-* Clasificación por categorías
-* Visualización de movimientos
-* Cálculo automático de saldo
-* Dashboard con resumen financiero
+🧪 Notas
 
----
+- MySQL debe estar en ejecución
+- No es necesario mantener abierto MySQL Workbench
+- Proyecto utiliza servidor de desarrollo Flask
 
-## 🧪 Notas
-
-* MySQL debe estar en ejecución para que la aplicación funcione
-* No es necesario mantener abierto MySQL Workbench
-* Este proyecto utiliza un servidor de desarrollo (Flask)
-
----
-
-## 🚀 Estado del Proyecto
+🚀 Estado del Proyecto
 
 Versión actual: MVP (Producto Mínimo Viable)
 
-Incluye funcionalidades básicas para la gestión de finanzas del hogar.
+Incluye funcionalidades base con estructura escalable de base de datos.
 
----
+👨‍💻 Autores
 
-## 👨‍💻 Autores
+- Daniel Neculman
+- Paula Matamala
 
-* Daniel Neculman
-* Paula Matamala
-
----
-
-## 📌 Observaciones
+📌 Observaciones
 
 El sistema fue desarrollado con fines académicos, aplicando conceptos de desarrollo web, bases de datos relacionales y metodologías ágiles.
